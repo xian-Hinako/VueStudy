@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<!--css引入-->
+		
+	</head>
+	<body>
+		<div id="book">
+			<table style="text-align:center" border="1">
+				<thead>
+					<td>序号</td>
+					<td>书籍名称</td>
+					<td>出版日期</td>
+					<td>价格</td>
+					<td>购买数量</td>
+					<td>操作</td>
+				</thead>
+				<tbody >
+					<tr v-for = "(item,index) in books">
+						<td>{{item.No}}</td>
+						<td>{{item.bookName}}</td>
+						<td>{{item.bookData}}</td>
+						<td id="myprice">￥{{item.price}}</td>
+						<td><input type="button" value="-" @click="down(index)">
+						<input style="width:40px" type="text" v-model:value="item.cout">
+						<input type="button" value="+" @click="up(index)"></td></td>
+						<td>移除</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			总价格：￥{{totalPrice}}
+		</div>
+		<!--js引入 建议放在body最后-->
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">		
+			let book = new Vue({
+				el:'#book',
+				data:{
+					books:[{
+						No:1,
+						bookData:'2010-10',
+						price:60.05,
+						cout:1,
+						bookName:'《java从入门到放弃》'
+					},
+					{
+						No:2,
+						bookData:'2012-10',
+						price:90.01,
+						cout:1,
+						bookName:'《PHP从入门到放弃》'
+					},
+					{
+						No:3,
+						bookData:'2013-10',
+						price:80.02,
+						cout:1,
+						bookName:'《Python从入门到放弃》'
+					},
+					{
+						No:4,
+						bookData:'2011-10',
+						price:70.03,
+						cout:1,
+						bookName:'《什么都是从入门到放弃》'
+					}
+					]
+				},
+				methods: {
+							up: function (index) {
+								this.books[index].cout++;
+							},
+							down: function (index) {
+								var cout = this.books[index].cout;
+								if (cout <= 1) {
+									this.books[index].cout = 1;
+								} else {
+									this.books[index].cout--;
+								}
+							},
+							remove: function (index) {
+								this.books.splice(index, 1);
+							}
+						},
+						computed: {
+							totalPrice() {
+								let total = 0
+								this.books.forEach(item => {
+									total += item.cout * item.price;
+								})
+								return total
+							}
+						},
+						
+			})
+
+		</script>
+	</body>
+</html>
+
