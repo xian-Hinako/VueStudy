@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<!--css引入-->
+		<style>
+			.active{
+				background-color: antiquewhite;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="book">
+			<table style="text-align:center" border="1">
+				<thead>
+					<td></td>
+					<td>序号</td>
+					<td>书籍名称</td>
+					<td>出版日期</td>
+					<td>价格</td>
+					<td>购买数量</td>
+					<td>操作</td>
+				</thead>
+				<tbody >
+					<tr v-for = "(item,index) in books" :key="item.No" :class="{'active':item.w}">
+						<div v-if="books.length === 0">没有商品</div>
+						<div v-else>
+						  <td><input type="checkbox" v-on:click="changeColor(item)" id="myCheckbox" :checked="myChecked"></td>
+						  <td>{{item.No}}</td>
+						  <td>{{item.bookName}}</td>
+						  <td>{{item.bookData}}</td>
+						  <td id="myprice">￥{{item.price}}</td>
+						  <td><my-components v-bind:item="item"></my-components></td>
+						  <td><button type="button" v-on:click="delerte(index)">移除</button></td>
+						</div>
+					</tr>
+				</tbody>
+			</table>
+			
+			总价格：￥{{totalPrice}}
+		</div>
+		<!--js引入 建议放在body最后-->
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">	
+
+			<!--定义局部组件-->
+			let upAndDown = {
+				props:['item'],
+				methods:{
+					down: function (item,$event) {
+						if(item.cout === 1){
+							alert("不能再少了")
+							return;
+						}else{
+							item.cout--;
+						}
+					}
+				},
+				template:`
+				        <div>
+				          <input type="button" value="-" v-on:click="down(item)">
+						  <input style="width:40px" type="text" v-model:value="item.cout">
+						  <input type="button" value="+" v-on:click="item.cout++">
+						</div>`
+
+			}
+			<!--定义实例-->
+			let book = new Vue({
+				el:'#book',
+				data:{
+					myChecked: true,
+					isActive: true,
+					books:[{
+						No:1,
+						bookData:'2010-10',
+						price:60.05,
+						cout:1,
+						bookName:'《java从入门到放弃》',
+						w:true
+					},
+					{
+						No:2,
+						bookData:'2012-10',
+						price:90.01,
+						cout:1,
+						bookName:'《PHP从入门到放弃》',
+						w:true
+					},
+					{
+						No:3,
+						bookData:'2013-10',
+						price:80.02,
+						cout:1,
+						bookName:'《Python从入门到放弃》',
+						w:true
+					},
+					{
+						No:4,
+						bookData:'2011-10',
+						price:70.03,
+						cout:1,
+						bookName:'《什么都是从入门到放弃》',
+						w:true
+					}
+					]					
+				},
+				<!--局部组件-->
+			    components:{
+					"my-components":upAndDown			
+				},
+				methods: {
+							up: function (item,$event) {
+								item.cout++;
+							},
+							delerte: function (index) {
+								this.books.splice(index, 1);
+							},
+							changeColor:function(item){
+								var box = document.getElementById("myCheckbox");
+								console.log(box.checked);
+								if(event.target.checked == true){
+									item.w = true;
+								}		    
+							    else{
+									item.w = false;
+								}															   
+							}
+						},
+						computed: {
+							totalPrice() {
+								let total = 0;
+								this.books.forEach(item => {
+									if(item.w == true){
+										total += item.cout * item.price;
+										total =parseFloat(total);
+									}	
+								})
+								return total
+							}
+			      }
+			})
+
+		</script>
+	</body>
+</html>
+
+
+
